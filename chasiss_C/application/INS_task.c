@@ -36,7 +36,9 @@
 
 #include "calibrate_task.h"
 #include "detect_task.h"
+#include "oled.h"
 
+#define RAD_TO_DEGREE 57.2957795f  // 即 180 / π
 
 #define IMU_temp_PWM(pwm)  imu_pwm_set(pwm)                    //pwm给定
 
@@ -175,8 +177,10 @@ fp32 INS_angle[3] = {0.0f, 0.0f, 0.0f};      //euler angle, unit rad.欧拉角 单位
 
 void INS_task(void const *pvParameters)
 {
+
     //wait a time
     osDelay(INS_TASK_INIT_TIME);
+
     while(BMI088_init())
     {
         osDelay(100);
@@ -187,6 +191,7 @@ void INS_task(void const *pvParameters)
     }
 
     BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
+    ist8310_read_mag(ist8310_real_data.mag);
     //rotate and zero drift
     //旋转和零飘 
     imu_cali_slove(INS_gyro, INS_accel, INS_mag, &bmi088_real_data, &ist8310_real_data);
@@ -213,6 +218,7 @@ void INS_task(void const *pvParameters)
     SPI1_DMA_init((uint32_t)gyro_dma_tx_buf, (uint32_t)gyro_dma_rx_buf, SPI_DMA_GYRO_LENGHT);
 
     imu_start_dma_flag = 1;
+
     
     while (1)
     {
@@ -243,6 +249,15 @@ void INS_task(void const *pvParameters)
             imu_temp_control(bmi088_real_data.temp);
         }
 
+        //because no use ist8310 and save time, no use
+        //我用一下.Mu
+        if(mag_update_flag &(1 << IMU_DR_SHFITS))
+        {
+            mag_update_flag &= ~(1<< IMU_DR_SHFITS);
+            //mag_update_flag |= (1 << IMU_SPI_SHFITS);//因为磁力计不用DMA，所以只用一个标志位就好
+            ist8310_read_mag(ist8310_real_data.mag);
+        }
+
         //rotate and zero drift 
         imu_cali_slove(INS_gyro, INS_accel, INS_mag, &bmi088_real_data, &ist8310_real_data);
 
@@ -265,17 +280,9 @@ void INS_task(void const *pvParameters)
         accel_fliter_3[2] = accel_fliter_2[2] * fliter_num[0] + accel_fliter_1[2] * fliter_num[1] + INS_accel[2] * fliter_num[2];
 
 
+
         AHRS_update(INS_quat, timing_time, INS_gyro, accel_fliter_3, INS_mag);
         get_angle(INS_quat, INS_angle + INS_YAW_ADDRESS_OFFSET, INS_angle + INS_PITCH_ADDRESS_OFFSET, INS_angle + INS_ROLL_ADDRESS_OFFSET);
-
-
-        //because no use ist8310 and save time, no use
-        if(mag_update_flag &= 1 << IMU_DR_SHFITS)
-        {
-            mag_update_flag &= ~(1<< IMU_DR_SHFITS);
-            mag_update_flag |= (1 << IMU_SPI_SHFITS);
-            //ist8310_read_mag(ist8310_real_data.mag);
-        }
 
     }
 }
@@ -284,24 +291,27 @@ void INS_task(void const *pvParameters)
 
 
 /**
-  * @brief          rotate the gyro, accel and mag, and calculate the zero drift, because sensors have 
-  *                 different install derection.
-  * @param[out]     gyro: after plus zero drift and rotate
-  * @param[out]     accel: after plus zero drift and rotate
-  * @param[out]     mag: after plus zero drift and rotate
-  * @param[in]      bmi088: gyro and accel data
-  * @param[in]      ist8310: mag data
-  * @retval         none
+  * @brief  Convert raw sensor data to corrected IMU data with coordinate transformation and offset compensation.
+  *         Mainly handles sensor axis misalignment and static bias (zero drift).
+  * @param[out] gyro   Output: calibrated gyroscope data (unit: °/s)
+  * @param[out] accel  Output: calibrated accelerometer data (unit: g)
+  * @param[out] mag    Output: calibrated magnetometer data (unit: uT)
+  * @param[in]  bmi088 Input: raw data from BMI088 gyroscope and accelerometer
+  * @param[in]  ist8310 Input: raw data from IST8310 magnetometer
+  * @retval    none
   */
-/**
-  * @brief          旋转陀螺仪,加速度计和磁力计,并计算零漂,因为设备有不同安装方式
-  * @param[out]     gyro: 加上零漂和旋转
-  * @param[out]     accel: 加上零漂和旋转
-  * @param[out]     mag: 加上零漂和旋转
-  * @param[in]      bmi088: 陀螺仪和加速度计数据
-  * @param[in]      ist8310: 磁力计数据
-  * @retval         none
+
+ /**
+  * @brief  将原始传感器数据转换为经过坐标旋转和零偏修正的 IMU 数据。
+  *         主要解决传感器安装方向不一致和静态零漂的问题。
+  * @param[out] gyro   输出：校正后的陀螺仪数据（单位：°/s）
+  * @param[out] accel  输出：校正后的加速度计数据（单位：g）
+  * @param[out] mag    输出：校正后的磁力计数据（单位：uT）
+  * @param[in]  bmi088 输入：来自 BMI088 的原始陀螺仪与加速度数据
+  * @param[in]  ist8310 输入：来自 IST8310 的原始磁力计数据
+  * @retval    无
   */
+
 static void imu_cali_slove(fp32 gyro[3], fp32 accel[3], fp32 mag[3], bmi088_real_data_t *bmi088, ist8310_real_data_t *ist8310)
 {
     for (uint8_t i = 0; i < 3; i++)
@@ -551,7 +561,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
     }
 
-
 }
 
 /**
@@ -589,9 +598,8 @@ static void imu_cmd_spi_dma(void)
             SPI1_DMA_enable((uint32_t)accel_dma_tx_buf, (uint32_t)accel_dma_rx_buf, SPI_DMA_ACCEL_LENGHT);
             return;
         }
-        
 
-
+        //开启温度的DMA传输
         
         if((accel_temp_update_flag & (1 << IMU_DR_SHFITS)) && !(hspi1.hdmatx->Instance->CR & DMA_SxCR_EN) && !(hspi1.hdmarx->Instance->CR & DMA_SxCR_EN)
         && !(gyro_update_flag & (1 << IMU_SPI_SHFITS)) && !(accel_update_flag & (1 << IMU_SPI_SHFITS)))
