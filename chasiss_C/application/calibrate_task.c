@@ -56,7 +56,7 @@
   *             and add the data lenght in cali_sensor_size, at last, add function in cali_hook_fun[CALI_LIST_LENGHT]
   *             使用遥控器进行开始校准
   *             第一步:遥控器的两个开关都打到下
-  *             第二步:两个摇杆打成\../,保存两秒.\.代表左摇杆向右下打.
+  *             第二步:两个摇杆打成\../,保存两秒  \.代表左摇杆向右下打.
   *             第三步:摇杆打成./\. 开始陀螺仪校准
   *                    或者摇杆打成'\/' 开始云台校准
   *                    或者摇杆打成/''\ 开始底盘校准
@@ -323,7 +323,7 @@ int8_t get_control_temperature(void)
   * @retval         none
   */
 /**
-  * @brief          获取纬度,默认22.0f
+  * @brief          获取纬度,默认深圳22.0f，(武汉30.0f)
   * @param[out]     latitude:fp32指针 
   * @retval         none
   */
@@ -341,7 +341,7 @@ void get_flash_latitude(float *latitude)
     }
     else
     {
-        *latitude = 22.0f;
+        *latitude = 30.0f;
     }
 }
 
@@ -396,7 +396,7 @@ static void RC_cmd_to_calibrate(void)
         cali_sensor[CALI_GIMBAL].cali_cmd = 1;
         cali_buzzer_off();
     }
-    else if (rc_action_flag == 3 && rc_cmd_time > RC_CMD_LONG_TIME)
+    else if (rc_action_flag == GYRO_FLAG && rc_cmd_time > RC_CMD_LONG_TIME)
     {
         //gyro cali
         rc_action_flag = 0;
@@ -426,12 +426,22 @@ static void RC_cmd_to_calibrate(void)
     {
         //two rockers set to  \../, hold for 2 seconds,
         //两个摇杆打成 \../,保持2s
+        //          *                 * 
+        //          *                 *      
+        //     * * * * * *   +   * * * * * * 
+        //          * \             / * 
+        //          *  \           /  *
         rc_cmd_time++;
     }
     else if (calibrate_RC->rc.ch[0] > RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[1] > RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[2] < -RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[3] > RC_CALI_VALUE_HOLE && switch_is_down(calibrate_RC->rc.s[0]) && switch_is_down(calibrate_RC->rc.s[1]) && rc_action_flag != 0)
     {
         //two rockers set '\/', hold for 2 seconds
         //两个摇杆打成'\/',保持2s
+        //       \  *                 *  /
+        //        \ *                 * /    
+        //     * * * * * *   +   * * * * * * 
+        //          *                 * 
+        //          *                 *
         rc_cmd_time++;
         rc_action_flag = GIMBAL_FLAG;
     }
@@ -439,6 +449,11 @@ static void RC_cmd_to_calibrate(void)
     {
         //two rocker set to ./\., hold for 2 seconds
         //两个摇杆打成./\.,保持2s
+        //          *                 *  
+        //          *                 *     
+        //     * * * * * *   +   * * * * * * 
+        //        / *                 * \    
+        //       /  *                 *  \ 
         rc_cmd_time++;
         rc_action_flag = GYRO_FLAG;
     }
@@ -446,6 +461,11 @@ static void RC_cmd_to_calibrate(void)
     {
         //two rocker set to /''\, hold for 2 seconds
         //两个摇杆打成/''\,保持2s
+        //          *  /           \  *  
+        //          * /             \ *     
+        //     * * * * * *   +   * * * * * * 
+        //          *                 *     
+        //          *                 *  
         rc_cmd_time++;
         rc_action_flag = CHASSIS_FLAG;
     }
@@ -627,6 +647,7 @@ static bool_t cali_head_hook(uint32_t *cali, bool_t cmd)
     }
     // self id
     local_cali_t->self_id = SELF_ID;
+    local_cali_t->firmware_version = FIRMWARE_VERSION;
     //imu control temperature
     local_cali_t->temperature = (int8_t)(cali_get_mcu_temperature()) + 10;
     //head_cali.temperature = (int8_t)(cali_get_mcu_temperature()) + 10;
@@ -635,9 +656,9 @@ static bool_t cali_head_hook(uint32_t *cali, bool_t cmd)
         local_cali_t->temperature = (int8_t)(GYRO_CONST_MAX_TEMP);
     }
     
-    local_cali_t->firmware_version = FIRMWARE_VERSION;
-    //shenzhen latitude 
-    local_cali_t->latitude = 22.0f;
+   
+    //武汉 latitude 
+    local_cali_t->latitude = 30.0f;
 
     return 1;
 }

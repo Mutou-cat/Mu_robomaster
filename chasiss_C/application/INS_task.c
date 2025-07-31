@@ -338,7 +338,7 @@ static void imu_temp_control(fp32 temp)
     static uint8_t temp_constant_time = 0;
     if (first_temperate)
     {
-        PID_calc(&imu_temp_pid, temp, get_control_temperature());
+        PID_calc(&imu_temp_pid, temp, 40);
         if (imu_temp_pid.out < 0.0f)
         {
             imu_temp_pid.out = 0.0f;
@@ -350,7 +350,7 @@ static void imu_temp_control(fp32 temp)
     {
         //在没有达到设置的温度，一直最大功率加热
         //in beginning, max power
-        if (temp > get_control_temperature())
+        if (temp > 40)
         {
             temp_constant_time++;
             if (temp_constant_time > 200)
@@ -417,7 +417,7 @@ void INS_cali_gyro(fp32 cali_scale[3], fp32 cali_offset[3], uint16_t *time_count
         }
         gyro_offset_calc(gyro_offset, INS_gyro, time_count);
 
-        cali_offset[0] = gyro_offset[0];
+		cali_offset[0] = gyro_offset[0];
         cali_offset[1] = gyro_offset[1];
         cali_offset[2] = gyro_offset[2];
         cali_scale[0] = 1.0f;
