@@ -50,7 +50,7 @@
 //遥控器左右摇杆（max 660）转化成车体左右速度（m/s）的比例
 #define CHASSIS_VY_RC_SEN 0.005f
 //in following yaw angle mode, rocker value add to angle 
-//跟随底盘yaw模式下，遥控器的yaw遥杆（max 660）增加到车体角度的比例
+//跟随云台yaw模式下，遥控器的yaw遥杆（max 660）增加到车体角度的比例
 #define CHASSIS_ANGLE_Z_RC_SEN 0.000002f
 //in not following yaw angle mode, rocker value change to rotation speed
 //不跟随云台的时候 遥控器的yaw遥杆（max 660）转化成车体旋转速度的比例
@@ -135,7 +135,7 @@
 typedef enum
 {
   CHASSIS_VECTOR_FOLLOW_GIMBAL_YAW,   //chassis will follow yaw gimbal motor relative angle.底盘会跟随云台相对角度
-  CHASSIS_VECTOR_FOLLOW_CHASSIS_YAW,  //chassis will have yaw angle(chassis_yaw) close-looped control.底盘有底盘角度控制闭环
+  CHASSIS_VECTOR_FOLLOW_CHASSIS_YAW,  //chassis will have yaw angle(chassis_yaw) close-looped control.底盘由底盘角度控制闭环
   CHASSIS_VECTOR_NO_FOLLOW_YAW,       //chassis will have rotation speed control. 底盘有旋转速度控制
   CHASSIS_VECTOR_RAW,                 //control-current will be sent to CAN bus derectly.
 

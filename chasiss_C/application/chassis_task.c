@@ -143,10 +143,10 @@ void chassis_task(void const *pvParameters)
     chassis_init(&chassis_move);
     //make sure all chassis motor is online,
     //判断底盘电机是否都在线
-    while (toe_is_error(CHASSIS_MOTOR1_TOE) || toe_is_error(CHASSIS_MOTOR2_TOE) || toe_is_error(CHASSIS_MOTOR3_TOE) || toe_is_error(CHASSIS_MOTOR4_TOE) || toe_is_error(DBUS_TOE))
-    {
-        vTaskDelay(CHASSIS_CONTROL_TIME_MS);
-    }
+    // while (toe_is_error(CHASSIS_MOTOR1_TOE) || toe_is_error(CHASSIS_MOTOR2_TOE) || toe_is_error(CHASSIS_MOTOR3_TOE) || toe_is_error(CHASSIS_MOTOR4_TOE) || toe_is_error(DBUS_TOE))
+    // {
+    //     vTaskDelay(CHASSIS_CONTROL_TIME_MS);
+    // }
 
     while (1)
     {

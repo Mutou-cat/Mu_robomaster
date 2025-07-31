@@ -155,6 +155,7 @@
 //电机编码值转化成角度值
 #ifndef MOTOR_ECD_TO_RAD
 #define MOTOR_ECD_TO_RAD 0.000766990394f //      2*  PI  /8192
+
 #endif
 
 typedef enum
