@@ -245,8 +245,8 @@ static uint8_t cali_sensor_size[CALI_LIST_LENGHT] =
         sizeof(head_cali_t) / 4, sizeof(gimbal_cali_t) / 4,
         sizeof(imu_cali_t) / 4, sizeof(imu_cali_t) / 4, sizeof(imu_cali_t) / 4};
 
-void *cali_hook_fun[CALI_LIST_LENGHT] = {cali_head_hook, cali_gimbal_hook, cali_gyro_hook, NULL, NULL};
-
+void *cali_hook_fun[CALI_LIST_LENGHT] = {cali_head_hook, NULL, cali_gyro_hook, NULL, NULL};
+//cali_gimbal_hook
 static uint32_t calibrate_systemTick;
 
 
