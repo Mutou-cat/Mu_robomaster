@@ -82,66 +82,66 @@ void oled_task(void const * argument)
         if(now_oled_errror == 0)
         {
 
-        static uint8_t refresh_tick = 0;
-       refresh_tick++;
-       //10Hz refresh
-        // if(refresh_tick > 10000 / (10 * 10))
-        // {
-
-        //     Print_angle=get_INS_angle_point();
-        //     OLED_operate_gram(PEN_CLEAR);
-        //     OLED_printf(0, 0, "INS_tsak run");
-        //     //OLED_printf(0, 16, "g:%.2f %.2f %.2f", INS_gyro[0], INS_gyro[1], INS_gyro[2]);
-        //     //OLED_printf(0, 32, "a:%.2f %.2f %.2f", INS_accel[0], INS_accel[1], INS_accel[2]);
-        //     //OLED_printf(0, 48, "m:%.2f %.2f %.2f", INS_mag[0], INS_mag[1], INS_mag[2]);
-        //     //OLED_printf(4, 0, "quat:%.2f %.2f %.2f %.2f", INS_quat[0], INS_quat[1], INS_quat[2], INS_quat[3]);
-        //     OLED_printf(0, 48, "e:%.2f %.2f %.2f", Print_angle[0] * RAD_TO_DEGREE, Print_angle[1] * RAD_TO_DEGREE, Print_angle[2] * RAD_TO_DEGREE);
-        //     // OLED_printf(4, 0, "temp:%.2f", bmi088_real_data.temp);
-        //     OLED_refresh_gram();
-
-        // }
+            static uint8_t refresh_tick = 0;
+            refresh_tick++;
             //10Hz refresh
-            if(refresh_tick > configTICK_RATE_HZ / (OLED_CONTROL_TIME * REFRESH_RATE))
+            if(refresh_tick > 10000 / (10 * 10))
             {
-                refresh_tick = 0;
+
+                Print_angle=get_INS_angle_point();
                 OLED_operate_gram(PEN_CLEAR);
-                OLED_show_graphic(0, 1, &battery_box);
-
-                if(get_battery_percentage() < 10)
-                {
-                    OLED_printf(9, 2, "%d", get_battery_percentage());
-                }
-                else if(get_battery_percentage() < 100)
-                {
-                    OLED_printf(6, 2, "%d", get_battery_percentage());
-                }
-                else
-                {
-                    OLED_printf(3, 2, "%d", get_battery_percentage());
-                }
-
-                OLED_show_string(90, 27+3, "DBUS");
-                OLED_show_graphic(115, 27+3, &check_box[error_list_local[DBUS_TOE].error_exist]);
-                for(i = CHASSIS_MOTOR1_TOE; i < TRIGGER_MOTOR_TOE + 1; i++)
-                {
-                    show_col = ((i-1) * 32) % 128;
-                    show_row = 18 + (i-1) / 4 * 12;
-                    OLED_show_char(show_col, show_row, 'M');
-                    OLED_show_char(show_col + 6, show_row, '0'+i);
-                    OLED_show_graphic(show_col + 12, show_row, &check_box[error_list_local[i].error_exist]);
-                }
-
-                for(i = BOARD_GYRO_TOE; i < REFEREE_TOE + 1; i++)
-                {
-                    show_col = (i * 32) % 128;
-                    show_row = 18 + i / 4 * 12;
-                    OLED_show_string(show_col, show_row, other_toe_name[i - BOARD_GYRO_TOE]);
-                    OLED_show_graphic(show_col + 18, show_row, &check_box[error_list_local[i].error_exist]);
-
-                }
-
+                OLED_printf(0, 0, "INS_tsak run");
+                //OLED_printf(0, 16, "g:%.2f %.2f %.2f", INS_gyro[0], INS_gyro[1], INS_gyro[2]);
+                //OLED_printf(0, 32, "a:%.2f %.2f %.2f", INS_accel[0], INS_accel[1], INS_accel[2]);
+                //OLED_printf(0, 48, "m:%.2f %.2f %.2f", INS_mag[0], INS_mag[1], INS_mag[2]);
+                //OLED_printf(4, 0, "quat:%.2f %.2f %.2f %.2f", INS_quat[0], INS_quat[1], INS_quat[2], INS_quat[3]);
+                OLED_printf(0, 48, "e:%.2f %.2f %.2f", Print_angle[0] * RAD_TO_DEGREE, Print_angle[1] * RAD_TO_DEGREE, Print_angle[2] * RAD_TO_DEGREE);
+                // OLED_printf(4, 0, "temp:%.2f", bmi088_real_data.temp);
                 OLED_refresh_gram();
+
             }
+            //10Hz refresh
+            // if(refresh_tick > configTICK_RATE_HZ / (OLED_CONTROL_TIME * REFRESH_RATE))
+            // {
+            //     refresh_tick = 0;
+            //     OLED_operate_gram(PEN_CLEAR);
+            //     OLED_show_graphic(0, 1, &battery_box);
+
+            //     if(get_battery_percentage() < 10)
+            //     {
+            //         OLED_printf(9, 2, "%d", get_battery_percentage());
+            //     }
+            //     else if(get_battery_percentage() < 100)
+            //     {
+            //         OLED_printf(6, 2, "%d", get_battery_percentage());
+            //     }
+            //     else
+            //     {
+            //         OLED_printf(3, 2, "%d", get_battery_percentage());
+            //     }
+
+            //     OLED_show_string(90, 27+3, "DBUS");
+            //     OLED_show_graphic(115, 27+3, &check_box[error_list_local[DBUS_TOE].error_exist]);
+            //     for(i = CHASSIS_MOTOR1_TOE; i < TRIGGER_MOTOR_TOE + 1; i++)
+            //     {
+            //         show_col = ((i-1) * 32) % 128;
+            //         show_row = 18 + (i-1) / 4 * 12;
+            //         OLED_show_char(show_col, show_row, 'M');
+            //         OLED_show_char(show_col + 6, show_row, '0'+i);
+            //         OLED_show_graphic(show_col + 12, show_row, &check_box[error_list_local[i].error_exist]);
+            //     }
+
+            //     for(i = BOARD_GYRO_TOE; i < REFEREE_TOE + 1; i++)
+            //     {
+            //         show_col = (i * 32) % 128;
+            //         show_row = 18 + i / 4 * 12;
+            //         OLED_show_string(show_col, show_row, other_toe_name[i - BOARD_GYRO_TOE]);
+            //         OLED_show_graphic(show_col + 18, show_row, &check_box[error_list_local[i].error_exist]);
+
+            //     }
+
+                    OLED_refresh_gram();
+            // }
         }
 
 

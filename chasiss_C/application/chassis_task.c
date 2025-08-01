@@ -235,8 +235,8 @@ static void chassis_init(chassis_move_t *chassis_move_init)
     chassis_move_init->chassis_INS_angle = get_INS_angle_point();
     //get gimbal motor data point
     //获取云台电机数据指针
-    chassis_move_init->chassis_yaw_motor = get_yaw_motor_point();
-    chassis_move_init->chassis_pitch_motor = get_pitch_motor_point();
+    // chassis_move_init->chassis_yaw_motor = get_yaw_motor_point();
+    // chassis_move_init->chassis_pitch_motor = get_pitch_motor_point();
     
     //get chassis motor data point,  initialize motor speed PID
     //获取底盘电机数据指针，初始化PID 
@@ -365,8 +365,13 @@ static void chassis_feedback_update(chassis_move_t *chassis_move_update)
 
     //calculate chassis euler angle, if chassis add a new gyro sensor,please change this code
     //计算底盘姿态角度, 如果底盘上有陀螺仪请更改这部分代码
-    chassis_move_update->chassis_yaw = rad_format(*(chassis_move_update->chassis_INS_angle + INS_YAW_ADDRESS_OFFSET) - chassis_move_update->chassis_yaw_motor->relative_angle);
-    chassis_move_update->chassis_pitch = rad_format(*(chassis_move_update->chassis_INS_angle + INS_PITCH_ADDRESS_OFFSET) - chassis_move_update->chassis_pitch_motor->relative_angle);
+    // chassis_move_update->chassis_yaw = rad_format(*(chassis_move_update->chassis_INS_angle + INS_YAW_ADDRESS_OFFSET) - chassis_move_update->chassis_yaw_motor->relative_angle);
+    // chassis_move_update->chassis_pitch = rad_format(*(chassis_move_update->chassis_INS_angle + INS_PITCH_ADDRESS_OFFSET) - chassis_move_update->chassis_pitch_motor->relative_angle);
+    // chassis_move_update->chassis_roll = *(chassis_move_update->chassis_INS_angle + INS_ROLL_ADDRESS_OFFSET);
+
+    //改用底盘自己的陀螺仪数据
+    chassis_move_update->chassis_yaw = *(chassis_move_update->chassis_INS_angle + INS_YAW_ADDRESS_OFFSET);
+    chassis_move_update->chassis_pitch = *(chassis_move_update->chassis_INS_angle + INS_PITCH_ADDRESS_OFFSET);
     chassis_move_update->chassis_roll = *(chassis_move_update->chassis_INS_angle + INS_ROLL_ADDRESS_OFFSET);
 }
 /**
