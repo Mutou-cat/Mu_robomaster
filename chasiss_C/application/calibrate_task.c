@@ -106,7 +106,7 @@
 #include "can_receive.h"
 #include "remote_control.h"
 #include "INS_task.h"
-#include "gimbal_task.h"
+
 
 
 //include head,gimbal,gyro,accel,mag. gyro,accel and mag have the same data struct. total 5(CALI_LIST_LENGHT) devices, need data lenght + 5 * 4 bytes(name[3]+cali)
@@ -707,59 +707,8 @@ static bool_t cali_gyro_hook(uint32_t *cali, bool_t cmd)
             imu_start_buzzer();
             
             return 0;
-        }
+        }   
     }
 
-    return 0;
-}
-
-/**
-  * @brief          gimbal cali function
-  * @param[in][out] cali:the point to gimbal data, when cmd == CALI_FUNC_CMD_INIT, param is [in],cmd == CALI_FUNC_CMD_ON, param is [out]
-  * @param[in]      cmd: 
-                    CALI_FUNC_CMD_INIT: means to use cali data to initialize original data
-                    CALI_FUNC_CMD_ON: means need to calibrate
-  * @retval         0:means cali task has not been done
-                    1:means cali task has been done
-  */
-/**
-  * @brief          云台设备校准
-  * @param[in][out] cali:指针指向云台数据,当cmd为CALI_FUNC_CMD_INIT, 参数是输入,CALI_FUNC_CMD_ON,参数是输出
-  * @param[in]      cmd: 
-                    CALI_FUNC_CMD_INIT: 代表用校准数据初始化原始数据
-                    CALI_FUNC_CMD_ON: 代表需要校准
-  * @retval         0:校准任务还没有完
-                    1:校准任务已经完成
-  */
-static bool_t cali_gimbal_hook(uint32_t *cali, bool_t cmd)
-{
-
-    gimbal_cali_t *local_cali_t = (gimbal_cali_t *)cali;
-    if (cmd == CALI_FUNC_CMD_INIT)
-    {
-        set_cali_gimbal_hook(local_cali_t->yaw_offset, local_cali_t->pitch_offset,
-                             local_cali_t->yaw_max_angle, local_cali_t->yaw_min_angle,
-                             local_cali_t->pitch_max_angle, local_cali_t->pitch_min_angle);
-        
-        return 0;
-    }
-    else if (cmd == CALI_FUNC_CMD_ON)
-    {
-        if (cmd_cali_gimbal_hook(&local_cali_t->yaw_offset, &local_cali_t->pitch_offset,
-                                 &local_cali_t->yaw_max_angle, &local_cali_t->yaw_min_angle,
-                                 &local_cali_t->pitch_max_angle, &local_cali_t->pitch_min_angle))
-        {
-            cali_buzzer_off();
-            
-            return 1;
-        }
-        else
-        {
-            gimbal_start_buzzer();
-            
-            return 0;
-        }
-    }
-    
     return 0;
 }

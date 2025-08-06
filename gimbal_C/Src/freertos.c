@@ -28,7 +28,6 @@
 /* USER CODE BEGIN Includes */
 
 #include "calibrate_task.h"
-#include "chassis_task.h"
 #include "detect_task.h"
 #include "gimbal_task.h"
 #include "INS_task.h"
@@ -37,7 +36,8 @@
 #include "referee_usart_task.h"
 #include "usb_task.h"
 #include "voltage_task.h"
-#include "servo_task.h"
+#include "CAN_transmit_task.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +54,7 @@ osThreadId referee_usart_task_handle;
 osThreadId usb_task_handle;
 osThreadId battery_voltage_handle;
 osThreadId servo_task_handle;
+osThreadId to_chasiss_board;
 
 
 /* USER CODE END PTD */
@@ -167,6 +168,8 @@ void MX_FREERTOS_Init(void) {
     osThreadDef(led, led_RGB_flow_task, osPriorityNormal, 0, 256);
     led_RGB_flow_handle = osThreadCreate(osThread(led), NULL);
 
+    osThreadDef(to_chasiss_board, CAN_transmit_task, osPriorityAboveNormal, 0, 256);
+    oled_handle = osThreadCreate(osThread(to_chasiss_board), NULL);
 
     osThreadDef(OLED, oled_task, osPriorityLow, 0, 256);
     oled_handle = osThreadCreate(osThread(OLED), NULL);

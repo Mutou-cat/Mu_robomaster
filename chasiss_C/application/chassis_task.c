@@ -20,7 +20,6 @@
 #include "chassis_behaviour.h"
 
 #include "cmsis_os.h"
-
 #include "arm_math.h"
 #include "pid.h"
 #include "remote_control.h"
@@ -122,6 +121,7 @@ uint32_t chassis_high_water;
 
 //底盘运动数据
 chassis_move_t chassis_move;
+const fp32* relative_angle;
 
 /**
   * @brief          chassis task, osDelay CHASSIS_CONTROL_TIME_MS (2ms) 
@@ -233,6 +233,8 @@ static void chassis_init(chassis_move_t *chassis_move_init)
     //get gyro sensor euler angle point
     //获取陀螺仪姿态角指针
     chassis_move_init->chassis_INS_angle = get_INS_angle_point();
+
+    relative_angle=get_yaw_relative_angle_point();
     //get gimbal motor data point
     //获取云台电机数据指针
     // chassis_move_init->chassis_yaw_motor = get_yaw_motor_point();
@@ -476,8 +478,10 @@ static void chassis_set_contorl(chassis_move_t *chassis_move_control)
         fp32 sin_yaw = 0.0f, cos_yaw = 0.0f;
         //rotate chassis direction, make sure vertial direction follow gimbal 
         //旋转控制底盘速度方向，保证前进方向是云台方向，有利于运动平稳
-        sin_yaw = arm_sin_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
-        cos_yaw = arm_cos_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
+        // sin_yaw = arm_sin_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
+        // cos_yaw = arm_cos_f32(-chassis_move_control->chassis_yaw_motor->relative_angle);
+        sin_yaw = arm_sin_f32(-(*relative_angle));
+        cos_yaw = arm_cos_f32(-(*relative_angle));
         chassis_move_control->vx_set = cos_yaw * vx_set + sin_yaw * vy_set;
         chassis_move_control->vy_set = -sin_yaw * vx_set + cos_yaw * vy_set;
         //set control relative angle  set-point
@@ -485,7 +489,7 @@ static void chassis_set_contorl(chassis_move_t *chassis_move_control)
         chassis_move_control->chassis_relative_angle_set = rad_format(angle_set);
         //calculate ratation speed
         //计算旋转PID角速度
-        chassis_move_control->wz_set = -PID_calc(&chassis_move_control->chassis_angle_pid, chassis_move_control->chassis_yaw_motor->relative_angle, chassis_move_control->chassis_relative_angle_set);
+        chassis_move_control->wz_set = -PID_calc(&chassis_move_control->chassis_angle_pid, *relative_angle, chassis_move_control->chassis_relative_angle_set);
         //speed limit
         //速度限幅
         chassis_move_control->vx_set = fp32_constrain(chassis_move_control->vx_set, chassis_move_control->vx_min_speed, chassis_move_control->vx_max_speed);

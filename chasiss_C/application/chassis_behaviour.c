@@ -85,7 +85,7 @@
 #include "chassis_task.h"
 #include "arm_math.h"
 
-#include "gimbal_behaviour.h"
+
 
 /**
   * @brief          when chassis behaviour mode is CHASSIS_ZERO_FORCE, the function is called
@@ -256,7 +256,7 @@ void chassis_behaviour_mode_set(chassis_move_t *chassis_move_mode)
     else if (switch_is_up(chassis_move_mode->chassis_RC->rc.s[CHASSIS_MODE_CHANNEL]))
     {
         //chassis_behaviour_mode = CHASSIS_INFANTRY_FOLLOW_GIMBAL_YAW;
-        chassis_behaviour_mode = CHASSIS_ENGINEER_FOLLOW_CHASSIS_YAW;
+        chassis_behaviour_mode = CHASSIS_INFANTRY_FOLLOW_GIMBAL_YAW;
     }
 
     //when gimbal in some mode, such as init mode, chassis must's move

@@ -58,6 +58,8 @@ RC_ctrl_t rc_ctrl;
 //接收原始数据，为18个字节，给了36个字节长度，防止DMA传输越界
 static uint8_t sbus_rx_buf[2][SBUS_RX_BUF_NUM];
 
+//接收到的遥控器原始数据，拷贝一份，目的：发送给云台开发板
+uint8_t sbus_rx_data[RC_FRAME_LENGTH];
 
 /**
   * @brief          remote control init
@@ -184,6 +186,8 @@ void USART3_IRQHandler(void)
             if(this_time_rx_len == RC_FRAME_LENGTH)
             {
                 sbus_to_rc(sbus_rx_buf[0], &rc_ctrl);
+                //拷贝一份数据，发送给云台开发板
+                memcpy(sbus_rx_data, sbus_rx_buf[0], 18);
                 //记录数据接收时间
                 detect_hook(DBUS_TOE);
                 sbus_to_usart1(sbus_rx_buf[0]);
@@ -216,6 +220,8 @@ void USART3_IRQHandler(void)
             {
                 //处理遥控器数据
                 sbus_to_rc(sbus_rx_buf[1], &rc_ctrl);
+                //拷贝一份数据，发送给云台开发板
+                memcpy(sbus_rx_data, sbus_rx_buf[1], 18);
                 //记录数据接收时间
                 detect_hook(DBUS_TOE);
                 sbus_to_usart1(sbus_rx_buf[1]);

@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -323,14 +323,14 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>1</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
-            <v6Lang>1</v6Lang>
-            <v6LangP>1</v6LangP>
+            <v6Lang>3</v6Lang>
+            <v6LangP>3</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
@@ -850,16 +850,6 @@
               <FilePath>..\application\detect_task.c</FilePath>
             </File>
             <File>
-              <FileName>gimbal_behaviour.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\gimbal_behaviour.c</FilePath>
-            </File>
-            <File>
-              <FileName>gimbal_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\gimbal_task.c</FilePath>
-            </File>
-            <File>
               <FileName>INS_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\INS_task.c</FilePath>
@@ -885,11 +875,6 @@
               <FilePath>..\application\remote_control.c</FilePath>
             </File>
             <File>
-              <FileName>shoot.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\shoot.c</FilePath>
-            </File>
-            <File>
               <FileName>test_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\test_task.c</FilePath>
@@ -913,6 +898,16 @@
               <FileName>servo_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\servo_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>CAN_transmit_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\application\CAN_transmit_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>CAN_transmit_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\application\CAN_transmit_task.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1011,8 +1006,8 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="CMSIS Core">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
         <targetInfos>
           <targetInfo name="standard_tpye_c"/>
         </targetInfos>

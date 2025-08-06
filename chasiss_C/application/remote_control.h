@@ -22,6 +22,7 @@
 #include "struct_typedef.h"
 #include "bsp_rc.h"
 
+
 #define SBUS_RX_BUF_NUM 36u
 
 #define RC_FRAME_LENGTH 18u
@@ -29,6 +30,9 @@
 #define RC_CH_VALUE_MIN         ((uint16_t)364)
 #define RC_CH_VALUE_OFFSET      ((uint16_t)1024)
 #define RC_CH_VALUE_MAX         ((uint16_t)1684)
+
+//接收到的遥控器原始数据，拷贝一份，目的：发送给云台开发板
+extern uint8_t sbus_rx_data[RC_FRAME_LENGTH];
 
 /* ----------------------- RC Switch Definition----------------------------- */
 #define RC_SW_UP                ((uint16_t)1)

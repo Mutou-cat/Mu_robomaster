@@ -17,10 +17,11 @@
 #ifndef PID_H
 #define PID_H
 #include "struct_typedef.h"
+
 enum PID_MODE
 {
     PID_POSITION = 0,
-    PID_DELTA
+    PID_DELTA ,
 };
 
 typedef struct

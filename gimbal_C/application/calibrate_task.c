@@ -410,17 +410,7 @@ static void RC_cmd_to_calibrate(void)
         }
         cali_buzzer_off();
     }
-    else if (rc_action_flag == CHASSIS_FLAG && rc_cmd_time > RC_CMD_LONG_TIME)
-    {
-        rc_action_flag = 0;
-        rc_cmd_time = 0;
-        //send CAN reset ID cmd to M3508
-        //发送CAN重设ID命令到3508
-        CAN_cmd_chassis_reset_ID();
-        CAN_cmd_chassis_reset_ID();
-        CAN_cmd_chassis_reset_ID();
-        cali_buzzer_off();
-    }
+
 
     if (calibrate_RC->rc.ch[0] < -RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[1] < -RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[2] > RC_CALI_VALUE_HOLE && calibrate_RC->rc.ch[3] < -RC_CALI_VALUE_HOLE && switch_is_down(calibrate_RC->rc.s[0]) && switch_is_down(calibrate_RC->rc.s[1]) && rc_action_flag == 0)
     {

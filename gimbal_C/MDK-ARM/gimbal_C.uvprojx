@@ -600,21 +600,6 @@
               <FilePath>..\application\CAN_receive.c</FilePath>
             </File>
             <File>
-              <FileName>chassis_behaviour.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\chassis_behaviour.c</FilePath>
-            </File>
-            <File>
-              <FileName>chassis_power_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\chassis_power_control.c</FilePath>
-            </File>
-            <File>
-              <FileName>chassis_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\chassis_task.c</FilePath>
-            </File>
-            <File>
               <FileName>detect_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\detect_task.c</FilePath>
@@ -680,9 +665,14 @@
               <FilePath>..\application\led_flow_task.c</FilePath>
             </File>
             <File>
-              <FileName>servo_task.c</FileName>
+              <FileName>CAN_transmit_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\application\CAN_transmit_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>CAN_transmit_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\application\servo_task.c</FilePath>
+              <FilePath>..\application\CAN_transmit_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -770,9 +760,6 @@
               <FilePath>..\components\controller\pid.c</FilePath>
             </File>
           </Files>
-        </Group>
-        <Group>
-          <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>
           <GroupName>Drivers/STM32F4xx_HAL_Driver</GroupName>
@@ -3459,6 +3446,9 @@
               </FileOption>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>

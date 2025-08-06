@@ -25,6 +25,7 @@
 
 #define GIMBAL_CAN  hcan1
 #define CHASSIS_CAN hcan2
+#define CHASSIS_BOARD_2_GIMBAL_BOARD  hcan1
 
 /* CAN send and receive ID */
 typedef enum
@@ -40,6 +41,10 @@ typedef enum
     CAN_TRIGGER_MOTOR_ID = 0x207,
     CAN_GIMBAL_ALL_ID = 0x1FF,
 
+    CAN_CHASSIS_BOARD_ID=0x001,
+    CAN_GIMBAL_BOARD_ID=0x002
+    
+
 } can_msg_id_e;
 
 //rm motor data
@@ -52,24 +57,10 @@ typedef struct
     int16_t last_ecd;
 } motor_measure_t;
 
+//遥控器dbus原始数据18字节，有效字节为前16字节，分成两个8字节发送
+extern void CAN_transmit_rc_data_1();
+extern void CAN_transmit_rc_data_2();
 
-/**
-  * @brief          send control current of motor (0x205, 0x206, 0x207, 0x208)
-  * @param[in]      yaw: (0x205) 6020 motor control current, range [-30000,30000] 
-  * @param[in]      pitch: (0x206) 6020 motor control current, range [-30000,30000]
-  * @param[in]      shoot: (0x207) 2006 motor control current, range [-10000,10000]
-  * @param[in]      rev: (0x208) reserve motor control current
-  * @retval         none
-  */
-/**
-  * @brief          发送电机控制电流(0x205,0x206,0x207,0x208)
-  * @param[in]      yaw: (0x205) 6020电机控制电流, 范围 [-30000,30000]
-  * @param[in]      pitch: (0x206) 6020电机控制电流, 范围 [-30000,30000]
-  * @param[in]      shoot: (0x207) 2006电机控制电流, 范围 [-10000,10000]
-  * @param[in]      rev: (0x208) 保留，电机控制电流
-  * @retval         none
-  */
-extern void CAN_cmd_gimbal(int16_t yaw, int16_t pitch, int16_t shoot, int16_t rev);
 
 /**
   * @brief          send CAN packet of ID 0x700, it will set chassis motor 3508 to quick ID setting
@@ -101,41 +92,6 @@ extern void CAN_cmd_chassis_reset_ID(void);
   */
 extern void CAN_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 
-/**
-  * @brief          return the yaw 6020 motor data point
-  * @param[in]      none
-  * @retval         motor data point
-  */
-/**
-  * @brief          返回yaw 6020电机数据指针
-  * @param[in]      none
-  * @retval         电机数据指针
-  */
-extern const motor_measure_t *get_yaw_gimbal_motor_measure_point(void);
-
-/**
-  * @brief          return the pitch 6020 motor data point
-  * @param[in]      none
-  * @retval         motor data point
-  */
-/**
-  * @brief          返回pitch 6020电机数据指针
-  * @param[in]      none
-  * @retval         电机数据指针
-  */
-extern const motor_measure_t *get_pitch_gimbal_motor_measure_point(void);
-
-/**
-  * @brief          return the trigger 2006 motor data point
-  * @param[in]      none
-  * @retval         motor data point
-  */
-/**
-  * @brief          返回拨弹电机 2006电机数据指针
-  * @param[in]      none
-  * @retval         电机数据指针
-  */
-extern const motor_measure_t *get_trigger_motor_measure_point(void);
 
 /**
   * @brief          return the chassis 3508 motor data point
@@ -149,5 +105,5 @@ extern const motor_measure_t *get_trigger_motor_measure_point(void);
   */
 extern const motor_measure_t *get_chassis_motor_measure_point(uint8_t i);
 
-
+extern const fp32* get_yaw_relative_angle_point(void);
 #endif

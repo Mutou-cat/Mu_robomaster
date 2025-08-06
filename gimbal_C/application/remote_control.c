@@ -73,20 +73,7 @@ void remote_control_init(void)
 {
     RC_Init(sbus_rx_buf[0], sbus_rx_buf[1], SBUS_RX_BUF_NUM);
 }
-/**
-  * @brief          get remote control data point
-  * @param[in]      none
-  * @retval         remote control data point
-  */
-/**
-  * @brief          获取遥控器数据指针
-  * @param[in]      none
-  * @retval         遥控器数据指针
-  */
-const RC_ctrl_t *get_remote_control_point(void)
-{
-    return &rc_ctrl;
-}
+
 
 //判断遥控器数据是否出错，
 uint8_t RC_data_is_error(void)
